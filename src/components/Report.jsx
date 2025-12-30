@@ -15,8 +15,10 @@ import {
   TableRow,
   Grid,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
-import { getReport } from "../lib/idb";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { getReport, deleteCost } from "../lib/idb";
 
 const currencies = ["USD", "ILS", "GBP", "EURO"];
 const months = [
@@ -54,6 +56,21 @@ function Report() {
       setError("Failed to get report: " + err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this cost item?")) {
+      return;
+    }
+
+    try {
+      await deleteCost(id);
+      // Refresh the report after deletion
+      const result = await getReport(year, month, currency);
+      setReport(result);
+    } catch (err) {
+      setError("Failed to delete cost: " + err.message);
     }
   };
 
@@ -147,6 +164,7 @@ function Report() {
                       <TableCell>Currency</TableCell>
                       <TableCell>Category</TableCell>
                       <TableCell>Description</TableCell>
+                      <TableCell align="center">Actions</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -157,6 +175,16 @@ function Report() {
                         <TableCell>{cost.currency}</TableCell>
                         <TableCell>{cost.category}</TableCell>
                         <TableCell>{cost.description}</TableCell>
+                        <TableCell align="center">
+                          <IconButton
+                            onClick={() => handleDelete(cost.id)}
+                            color="error"
+                            aria-label="delete"
+                            size="small"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

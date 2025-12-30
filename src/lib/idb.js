@@ -143,6 +143,7 @@ export function getReport(year, month, currency) {
         // Filter by month
         if (item.month === month) {
           costs.push({
+            id: item.id,
             sum: item.sum,
             currency: item.currency,
             category: item.category,
@@ -245,6 +246,37 @@ export function getCostsByMonth(year, month) {
 
     request.onerror = () => {
       reject(new Error("Failed to get costs: " + request.error));
+    };
+  });
+}
+
+/**
+ * Deletes a cost item from the database by its id
+ * @param {number} id - The id of the cost item to delete
+ * @returns {Promise<void>} Promise that resolves when the item is deleted
+ */
+export function deleteCost(id) {
+  return new Promise((resolve, reject) => {
+    if (!dbInstance) {
+      reject(new Error("Database not opened. Call openCostsDB first."));
+      return;
+    }
+
+    if (!id || typeof id !== "number") {
+      reject(new Error("Invalid id. Must be a number."));
+      return;
+    }
+
+    const transaction = dbInstance.transaction([STORE_NAME], "readwrite");
+    const objectStore = transaction.objectStore(STORE_NAME);
+    const request = objectStore.delete(id);
+
+    request.onsuccess = () => {
+      resolve();
+    };
+
+    request.onerror = () => {
+      reject(new Error("Failed to delete cost: " + request.error));
     };
   });
 }

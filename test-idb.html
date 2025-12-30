@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>idb.js Library Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>idb.js Library Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Open Database</h2>
+        <button onclick="testOpenDB()">Open Database</button>
+        <div id="result1" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Add Cost Item</h2>
+        <button onclick="testAddCost()">Add Sample Cost</button>
+        <div id="result2" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Get Report</h2>
+        <button onclick="testGetReport()">Get Report (Current Month)</button>
+        <div id="result3" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: Add Multiple Costs</h2>
+        <button onclick="testAddMultipleCosts()">Add Multiple Costs</button>
+        <div id="result4" class="result"></div>
+    </div>
+
+    <script src="idb.js"></script>
+    <script>
+        let dbOpened = false;
+
+        async function testOpenDB() {
+            const resultDiv = document.getElementById('result1');
+            resultDiv.textContent = 'Opening database...';
+            resultDiv.className = 'result';
+
+            try {
+                await idb.openCostsDB('testCostsDB', 1);
+                dbOpened = true;
+                resultDiv.textContent = '✓ Database opened successfully!';
+                resultDiv.className = 'result success';
+            } catch (error) {
+                resultDiv.textContent = '✗ Error: ' + error.message;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function testAddCost() {
+            const resultDiv = document.getElementById('result2');
+            
+            if (!dbOpened) {
+                resultDiv.textContent = '✗ Please open database first!';
+                resultDiv.className = 'result error';
+                return;
+            }
+
+            resultDiv.textContent = 'Adding cost...';
+            resultDiv.className = 'result';
+
+            try {
+                const cost = {
+                    sum: 100,
+                    currency: 'USD',
+                    category: 'Food',
+                    description: 'Test cost item'
+                };
+                const result = await idb.addCost(cost);
+                resultDiv.textContent = '✓ Cost added successfully!\n' + JSON.stringify(result, null, 2);
+                resultDiv.className = 'result success';
+            } catch (error) {
+                resultDiv.textContent = '✗ Error: ' + error.message;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function testGetReport() {
+            const resultDiv = document.getElementById('result3');
+            
+            if (!dbOpened) {
+                resultDiv.textContent = '✗ Please open database first!';
+                resultDiv.className = 'result error';
+                return;
+            }
+
+            resultDiv.textContent = 'Getting report...';
+            resultDiv.className = 'result';
+
+            try {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = now.getMonth() + 1;
+                const report = await idb.getReport(year, month, 'USD');
+                resultDiv.textContent = '✓ Report retrieved successfully!\n' + JSON.stringify(report, null, 2);
+                resultDiv.className = 'result success';
+            } catch (error) {
+                resultDiv.textContent = '✗ Error: ' + error.message;
+                resultDiv.className = 'result error';
+            }
+        }
+
+        async function testAddMultipleCosts() {
+            const resultDiv = document.getElementById('result4');
+            
+            if (!dbOpened) {
+                resultDiv.textContent = '✗ Please open database first!';
+                resultDiv.className = 'result error';
+                return;
+            }
+
+            resultDiv.textContent = 'Adding multiple costs...';
+            resultDiv.className = 'result';
+
+            try {
+                const costs = [
+                    { sum: 50, currency: 'USD', category: 'Food', description: 'Groceries' },
+                    { sum: 30, currency: 'GBP', category: 'Transportation', description: 'Bus ticket' },
+                    { sum: 200, currency: 'ILS', category: 'Education', description: 'Course fee' }
+                ];
+
+                const results = [];
+                for (const cost of costs) {
+                    const result = await idb.addCost(cost);
+                    results.push(result);
+                }
+
+                resultDiv.textContent = '✓ All costs added successfully!\n' + JSON.stringify(results, null, 2);
+                resultDiv.className = 'result success';
+            } catch (error) {
+                resultDiv.textContent = '✗ Error: ' + error.message;
+                resultDiv.className = 'result error';
+            }
+        }
+    </script>
+</body>
+</html>
+

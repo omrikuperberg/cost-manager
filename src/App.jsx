@@ -19,11 +19,16 @@ import Settings from "./components/Settings";
 
 const theme = createTheme({
   palette: {
+    mode: "dark",
     primary: {
-      main: "#1976d2",
+      main: "#90caf9",
     },
     secondary: {
-      main: "#dc004e",
+      main: "#f48fb1",
+    },
+    background: {
+      default: "#121212",
+      paper: "#1e1e1e",
     },
   },
 });

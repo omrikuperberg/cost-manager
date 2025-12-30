@@ -37,14 +37,14 @@ const months = [
 ];
 
 const COLORS = [
-  "#0088FE",
-  "#00C49F",
-  "#FFBB28",
-  "#FF8042",
-  "#8884d8",
-  "#82ca9d",
-  "#ffc658",
-  "#ff7300",
+  "#4fc3f7",
+  "#4dd0e1",
+  "#81c784",
+  "#ffb74d",
+  "#ba68c8",
+  "#64b5f6",
+  "#ffa726",
+  "#ef5350",
 ];
 
 function PieChart() {
@@ -190,8 +190,13 @@ function PieChart() {
                 </Pie>
                 <Tooltip
                   formatter={(value) => `${value.toFixed(2)} ${currency}`}
+                  contentStyle={{
+                    backgroundColor: "#1e1e1e",
+                    border: "1px solid #424242",
+                    color: "#ffffff",
+                  }}
                 />
-                <Legend />
+                <Legend wrapperStyle={{ color: "#ffffff" }} />
               </RechartsPieChart>
             </ResponsiveContainer>
           </Box>

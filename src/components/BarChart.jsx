@@ -145,16 +145,25 @@ function BarChart() {
             </Typography>
             <ResponsiveContainer width="100%" height={400}>
               <RechartsBarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
+                <CartesianGrid strokeDasharray="3 3" stroke="#424242" />
+                <XAxis
+                  dataKey="month"
+                  tick={{ fill: "#ffffff" }}
+                  stroke="#ffffff"
+                />
+                <YAxis tick={{ fill: "#ffffff" }} stroke="#ffffff" />
                 <Tooltip
                   formatter={(value) => `${value.toFixed(2)} ${currency}`}
+                  contentStyle={{
+                    backgroundColor: "#1e1e1e",
+                    border: "1px solid #424242",
+                    color: "#ffffff",
+                  }}
                 />
-                <Legend />
+                <Legend wrapperStyle={{ color: "#ffffff" }} />
                 <Bar
                   dataKey="total"
-                  fill="#8884d8"
+                  fill="#90caf9"
                   name={`Total (${currency})`}
                 />
               </RechartsBarChart>

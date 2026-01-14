@@ -22,18 +22,15 @@ A front-end cost management application built with React, Material-UI, and Index
 ## Installation
 
 1. Install dependencies:
+
 ```bash
 npm install
 ```
 
 2. Start the development server:
+
 ```bash
 npm run dev
-```
-
-3. Build for production:
-```bash
-npm run build
 ```
 
 ## Project Structure
@@ -100,11 +97,3 @@ The server must include the `Access-Control-Allow-Origin: *` header for CORS.
 ## Testing
 
 To test the vanilla `idb.js` library, open `test-idb.html` in a web browser.
-
-## Browser Support
-
-The application is designed for desktop web browsers that support:
-- IndexedDB
-- ES6+ JavaScript
-- Fetch API
-
